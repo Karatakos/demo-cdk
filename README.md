@@ -6,7 +6,7 @@ Note: Only support GitHub repos
 
 ### Step 1. Prerequisites
 
-1. Stacks generated via CDK synth including context for GitHub `cdk synth --context GH_REPO=myrepo --context GH_ACCOUNT_OWNER=owner --context GH_SECRET=secret`
+1. Stacks generated via CDK synth including context for GitHub `cdk synth`
 1. `cdk deploy ResourcesStack` completed successfully -- provisions ECR repo
 1. Initial image deployed to the new ECR repo. See app repo's README.md.
 
@@ -23,7 +23,7 @@ cdk deploy AppStack
 Pipeline stack will deploy `CodeBuild`, `CodeDeploy` and `CodePipline` along with supporting resources such as S3 asset buckets.
 
 ```
-cdk deploy PipelineStack
+cdk deploy PipelineStack --context GH_REPO=myrepo --context GH_ACCOUNT_OWNER=owner --context GH_SECRET=secret
 ```
 
 ## CDK Info
@@ -31,7 +31,6 @@ cdk deploy PipelineStack
 ### Context
 
 * Clearing context: `cdk context --clear`
-* Setting GitHub repo context: `cdk synth --context GH_REPO=myrepo --context GH_ACCOUNT_OWNER=owner --context GH_SECRET=secret`
 
 ### Deleting stacks
 
