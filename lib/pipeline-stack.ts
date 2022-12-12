@@ -112,7 +112,7 @@ class PipelineStack extends cdk.Stack {
           build: {
             commands: [
               "echo 'Building the docker image'",
-              "docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest -f service.Dockerfile ."
+              "docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest -f Dockerfile ."
             ]
           },
           post_build: {
