@@ -1,0 +1,64 @@
+{
+ "Resources": {
+  "DemoECRRepo994ECEE4": {
+   "Type": "AWS::ECR::Repository",
+   "Properties": {
+    "RepositoryName": "woven-demo-app",
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ResourcesStack/DemoECRRepo/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0XIQQ5AMBBA0bPYt0MFF3ADDiDUSKZopVNEpHcnsbD6eT+HMoMs6U+WepzlQgPcbej1LN7VofZwN7g5puD8JerJ/oof2e1eYxTWjQiG00MVoCpQiWEi6XcbaEVovj44ZIu7bwAAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ResourcesStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
