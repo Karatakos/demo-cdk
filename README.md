@@ -1,15 +1,42 @@
-# Welcome to your CDK TypeScript project
+# Woven Demo CICD Project via CDK
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`TmpStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+## Deployment
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Note: Only support GitHub repos
 
-## Useful commands
+### Step 1. Prerequisites
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+1. Stacks generated via CDK synth including context for GitHub `cdk synth --context GH_REPO=myrepo --context GH_ACCOUNT_OWNER=owner --context GH_SECRET=secret`
+1. `cdk deploy ResourcesStack` completed successfully -- provisions ECR repo
+1. Initial image deployed to the new ECR repo. See app repo's README.md.
+
+### Step 2. App Stack Deployed
+
+App stack will deploy all application resources such as ASG, ALB and an ECS cluster
+
+```
+cdk deploy AppStack
+```
+
+### Step 3. Pipeline Stack Deployed
+
+Pipeline stack will deploy `CodeBuild`, `CodeDeploy` and `CodePipline` along with supporting resources such as S3 asset buckets.
+
+```
+cdk deploy PipelineStack
+```
+
+## CDK Info
+
+### Context
+
+* Clearing context: `cdk context --clear`
+* Setting GitHub repo context: `cdk synth --context GH_REPO=myrepo --context GH_ACCOUNT_OWNER=owner --context GH_SECRET=secret`
+
+### Deleting stacks
+
+``` 
+cdk delete ResourcesStack
+cdk delete AppStack
+cdk delete PipelineStack
+```

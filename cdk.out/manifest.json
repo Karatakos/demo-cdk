@@ -7,6 +7,65 @@
         "file": "tree.json"
       }
     },
+    "ResourcesStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ResourcesStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ResourcesStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://869229378759/ap-northeast-1",
+      "properties": {
+        "templateFile": "ResourcesStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-deploy-role-869229378759-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-cfn-exec-role-869229378759-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-869229378759-ap-northeast-1/3943a2f8a535376b2f015d847919ca25d717bbf691cb6872a3329e6dbb73b382.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ResourcesStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-lookup-role-869229378759-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ResourcesStack.assets"
+      ],
+      "metadata": {
+        "/ResourcesStack/DemoECRRepo/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECRRepo994ECEE4"
+          }
+        ],
+        "/ResourcesStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ResourcesStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ResourcesStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ResourcesStack"
+    },
     "AppStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
@@ -17,20 +76,20 @@
     },
     "AppStack": {
       "type": "aws:cloudformation:stack",
-      "environment": "aws://unknown-account/unknown-region",
+      "environment": "aws://869229378759/ap-northeast-1",
       "properties": {
         "templateFile": "AppStack.template.json",
         "validateOnSynth": false,
-        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
-        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1d60776fd73b8be4597a53995b62eb28c8a4cd16c8e99307c376aafe8cf36400.json",
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-deploy-role-869229378759-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-cfn-exec-role-869229378759-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-869229378759-ap-northeast-1/732b228112fb4bd8c583cb1fd45358166b92f47165baae0ffa6601d9ed841910.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
           "AppStack.assets"
         ],
         "lookupRole": {
-          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "arn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-lookup-role-869229378759-ap-northeast-1",
           "requiresBootstrapStackVersion": 8,
           "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
         }
@@ -39,16 +98,179 @@
         "AppStack.assets"
       ],
       "metadata": {
+        "/AppStack/DemoALBSG/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoALBSG7253B132"
+          }
+        ],
+        "/AppStack/DemoInstanceSG/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoInstanceSGD8F010B2"
+          }
+        ],
+        "/AppStack/DemoInstanceSG/from AppStackDemoALBSGC2A030D9:32768-65535": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoInstanceSGfromAppStackDemoALBSGC2A030D932768655356FFE8EBD"
+          }
+        ],
+        "/AppStack/demoInstanceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "demoInstanceRole7BC8FAD6"
+          }
+        ],
+        "/AppStack/demoInstanceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "demoInstanceRoleDefaultPolicy459B101F"
+          }
+        ],
+        "/AppStack/DemoASG": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "desiredCapacity has been configured. Be aware this will reset the size of your AutoScalingGroup on every deployment. See https://github.com/aws/aws-cdk/issues/5215",
+            "trace": [
+              "Annotations.addMessage (/Users/adrian/Workspace/woven-demo-cdk/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
+              "Annotations.addWarning (/Users/adrian/Workspace/woven-demo-cdk/node_modules/aws-cdk-lib/core/lib/annotations.js:1:600)",
+              "new AutoScalingGroup (/Users/adrian/Workspace/woven-demo-cdk/node_modules/aws-cdk-lib/aws-autoscaling/lib/auto-scaling-group.js:1:13492)",
+              "AppStack.provisionASG (/Users/adrian/Workspace/woven-demo-cdk/lib/app-stack.ts:168:19)",
+              "new AppStack (/Users/adrian/Workspace/woven-demo-cdk/lib/app-stack.ts:26:24)",
+              "Object.<anonymous> (/Users/adrian/Workspace/woven-demo-cdk/bin/demo.ts:15:18)",
+              "Module._compile (internal/modules/cjs/loader.js:1063:30)",
+              "Module.m._compile (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/index.ts:1618:23)",
+              "Module._extensions..js (internal/modules/cjs/loader.js:1092:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (internal/modules/cjs/loader.js:928:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:769:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:72:12)",
+              "phase4 (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/adrian/Workspace/woven-demo-cdk/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (internal/modules/cjs/loader.js:1063:30)",
+              "Object.Module._extensions..js (internal/modules/cjs/loader.js:1092:10)",
+              "Module.load (internal/modules/cjs/loader.js:928:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:769:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:72:12)",
+              "/usr/local/lib/node_modules/npm/node_modules/libnpx/index.js:268:14"
+            ]
+          }
+        ],
+        "/AppStack/DemoASG/InstanceProfile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoASGInstanceProfile746346B1"
+          }
+        ],
+        "/AppStack/DemoASG/LaunchConfig": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoASGLaunchConfigF124DA9D"
+          }
+        ],
+        "/AppStack/DemoASG/ASG": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoASG422AE839"
+          }
+        ],
+        "/AppStack/SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter"
+          }
+        ],
+        "/AppStack/DemoECSCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSCluster76E5C18A"
+          }
+        ],
+        "/AppStack/DemoECSCluster/DemoECSCluster": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSClusterAEF07540"
+          }
+        ],
+        "/AppStack/DemoASGProvider/DemoASGProvider": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoASGProvider4E814F93"
+          }
+        ],
+        "/AppStack/DemoECSTaskDef/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSTaskDefTaskRoleA100DD9A"
+          }
+        ],
+        "/AppStack/DemoECSTaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSTaskDef62825972"
+          }
+        ],
+        "/AppStack/DemoECSTaskDef/DemoECSTaskDefContainer/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C"
+          }
+        ],
+        "/AppStack/DemoECSTaskDef/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSTaskDefExecutionRole5FAFFC54"
+          }
+        ],
+        "/AppStack/DemoECSTaskDef/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSTaskDefExecutionRoleDefaultPolicyB5AE0CE5"
+          }
+        ],
+        "/AppStack/DemoECSClusterEC2Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoECSClusterEC2Service58E000A9"
+          }
+        ],
+        "/AppStack/DemoALB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoALB6736E692"
+          }
+        ],
+        "/AppStack/DemoALB/DemoALBListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoALBDemoALBListenerB1477B05"
+          }
+        ],
+        "/AppStack/DemoALB/DemoALBListener/DemoECSClusterTargetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239"
+          }
+        ],
         "/AppStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadata"
           }
         ],
-        "/AppStack/CDKMetadata/Condition": [
+        "/AppStack/Exports/Output{\"Ref\":\"DemoECSCluster76E5C18A\"}": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CDKMetadataAvailable"
+            "data": "ExportsOutputRefDemoECSCluster76E5C18A198E0C70"
+          }
+        ],
+        "/AppStack/Exports/Output{\"Fn::GetAtt\":[\"DemoECSClusterEC2Service58E000A9\",\"Name\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttDemoECSClusterEC2Service58E000A9Name584E297B"
           }
         ],
         "/AppStack/BootstrapVersion": [
@@ -76,38 +298,117 @@
     },
     "PipelineStack": {
       "type": "aws:cloudformation:stack",
-      "environment": "aws://unknown-account/unknown-region",
+      "environment": "aws://869229378759/ap-northeast-1",
       "properties": {
         "templateFile": "PipelineStack.template.json",
         "validateOnSynth": false,
-        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
-        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/fb8f5c9af79443ef76c7eb24cb4d2afc6636d1ad9dd1716362e5e67ca3e1043c.json",
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-deploy-role-869229378759-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-cfn-exec-role-869229378759-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-869229378759-ap-northeast-1/9fe91d7ea48298466229cc240833c35779c1410f99e08e5c5f715ecd61976613.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
           "PipelineStack.assets"
         ],
         "lookupRole": {
-          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "arn": "arn:${AWS::Partition}:iam::869229378759:role/cdk-hnb659fds-lookup-role-869229378759-ap-northeast-1",
           "requiresBootstrapStackVersion": 8,
           "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
         }
       },
       "dependencies": [
+        "AppStack",
         "PipelineStack.assets"
       ],
       "metadata": {
+        "/PipelineStack/DemoCodePipeline/ArtifactsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineArtifactsBucketA316DC01"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/ArtifactsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineArtifactsBucketPolicyBAF2A3CA"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineRoleA52D9F30"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineRoleDefaultPolicy0538704C"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineDCF311B1"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Source/DemoGitHubSourceAction/WebhookResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineSourceDemoGitHubSourceActionWebhookResource83375054"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRoleDefaultPolicy7F463C4C"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9"
+          }
+        ],
+        "/PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleDefaultPolicyBD1ABBA1"
+          }
+        ],
+        "/PipelineStack/DemoCodeBuildRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodeBuildRole75B5C2D4"
+          }
+        ],
+        "/PipelineStack/DemoCodeBuildRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodeBuildRoleDefaultPolicy6A466DEC"
+          }
+        ],
+        "/PipelineStack/DemoCodeBuildLogs/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DemoCodeBuildLogsDD5D1728"
+          }
+        ],
+        "/PipelineStack/TsukeAssets-CodeBuild-Action/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TsukeAssetsCodeBuildActionEBCDB16C"
+          }
+        ],
         "/PipelineStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadata"
-          }
-        ],
-        "/PipelineStack/CDKMetadata/Condition": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "CDKMetadataAvailable"
           }
         ],
         "/PipelineStack/BootstrapVersion": [

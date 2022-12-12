@@ -12,10 +12,1026 @@
           "version": "10.1.183"
         }
       },
+      "ResourcesStack": {
+        "id": "ResourcesStack",
+        "path": "ResourcesStack",
+        "children": {
+          "DemoECRRepo": {
+            "id": "DemoECRRepo",
+            "path": "ResourcesStack/DemoECRRepo",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ResourcesStack/DemoECRRepo/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECR::Repository",
+                  "aws:cdk:cloudformation:props": {
+                    "repositoryName": "woven-demo-app",
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecr.CfnRepository",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.Repository",
+              "version": "2.50.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "ResourcesStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "ResourcesStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.183"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.50.0"
+        }
+      },
       "AppStack": {
         "id": "AppStack",
         "path": "AppStack",
         "children": {
+          "ImportVPC": {
+            "id": "ImportVPC",
+            "path": "AppStack/ImportVPC",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "AppStack/ImportVPC/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.50.0"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "AppStack/ImportVPC/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.50.0"
+                }
+              },
+              "PublicSubnet3": {
+                "id": "PublicSubnet3",
+                "path": "AppStack/ImportVPC/PublicSubnet3",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.50.0"
+            }
+          },
+          "DemoALBSG": {
+            "id": "DemoALBSG",
+            "path": "AppStack/DemoALBSG",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/DemoALBSG/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "AppStack/DemoALBSG",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 80,
+                        "toPort": 80,
+                        "description": "from 0.0.0.0/0:80"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ],
+                    "vpcId": "vpc-2e48bf48"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.50.0"
+            }
+          },
+          "DemoInstanceSG": {
+            "id": "DemoInstanceSG",
+            "path": "AppStack/DemoInstanceSG",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/DemoInstanceSG/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "AppStack/DemoInstanceSG",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 22,
+                        "toPort": 22,
+                        "description": "from 0.0.0.0/0:22"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ],
+                    "vpcId": "vpc-2e48bf48"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.50.0"
+                }
+              },
+              "from AppStackDemoALBSGC2A030D9:32768-65535": {
+                "id": "from AppStackDemoALBSGC2A030D9:32768-65535",
+                "path": "AppStack/DemoInstanceSG/from AppStackDemoALBSGC2A030D9:32768-65535",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "ipProtocol": "tcp",
+                    "description": "from AppStackDemoALBSGC2A030D9:32768-65535",
+                    "fromPort": 32768,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "DemoInstanceSGD8F010B2",
+                        "GroupId"
+                      ]
+                    },
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "DemoALBSG7253B132",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 65535
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.50.0"
+            }
+          },
+          "demoInstanceRole": {
+            "id": "demoInstanceRole",
+            "path": "AppStack/demoInstanceRole",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/demoInstanceRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ec2.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+                          ]
+                        ]
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.50.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "AppStack/demoInstanceRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AppStack/demoInstanceRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "ecs:DeregisterContainerInstance",
+                                "ecs:RegisterContainerInstance",
+                                "ecs:Submit*"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "DemoECSCluster76E5C18A",
+                                  "Arn"
+                                ]
+                              }
+                            },
+                            {
+                              "Action": [
+                                "ecs:Poll",
+                                "ecs:StartTelemetrySession"
+                              ],
+                              "Condition": {
+                                "ArnEquals": {
+                                  "ecs:cluster": {
+                                    "Fn::GetAtt": [
+                                      "DemoECSCluster76E5C18A",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              },
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "ecr:GetAuthorizationToken",
+                                "ecs:DiscoverPollEndpoint",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "demoInstanceRoleDefaultPolicy459B101F",
+                        "roles": [
+                          {
+                            "Ref": "demoInstanceRole7BC8FAD6"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.50.0"
+            }
+          },
+          "DemoASG": {
+            "id": "DemoASG",
+            "path": "AppStack/DemoASG",
+            "children": {
+              "InstanceProfile": {
+                "id": "InstanceProfile",
+                "path": "AppStack/DemoASG/InstanceProfile",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                  "aws:cdk:cloudformation:props": {
+                    "roles": [
+                      {
+                        "Ref": "demoInstanceRole7BC8FAD6"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnInstanceProfile",
+                  "version": "2.50.0"
+                }
+              },
+              "LaunchConfig": {
+                "id": "LaunchConfig",
+                "path": "AppStack/DemoASG/LaunchConfig",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::LaunchConfiguration",
+                  "aws:cdk:cloudformation:props": {
+                    "imageId": {
+                      "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter"
+                    },
+                    "instanceType": "t2.nano",
+                    "iamInstanceProfile": {
+                      "Ref": "DemoASGInstanceProfile746346B1"
+                    },
+                    "securityGroups": [
+                      {
+                        "Fn::GetAtt": [
+                          "DemoInstanceSGD8F010B2",
+                          "GroupId"
+                        ]
+                      }
+                    ],
+                    "userData": {
+                      "Fn::Base64": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "#!/bin/bash\necho ECS_CLUSTER=",
+                            {
+                              "Ref": "DemoECSCluster76E5C18A"
+                            },
+                            " >> /etc/ecs/ecs.config\nsudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP\nsudo service iptables save\necho ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config"
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnLaunchConfiguration",
+                  "version": "2.50.0"
+                }
+              },
+              "ASG": {
+                "id": "ASG",
+                "path": "AppStack/DemoASG/ASG",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "maxSize": "2",
+                    "minSize": "1",
+                    "desiredCapacity": "1",
+                    "healthCheckType": "EC2",
+                    "launchConfigurationName": {
+                      "Ref": "DemoASGLaunchConfigF124DA9D"
+                    },
+                    "newInstancesProtectedFromScaleIn": true,
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Name",
+                        "value": "AppStack/DemoASG",
+                        "propagateAtLaunch": true
+                      }
+                    ],
+                    "vpcZoneIdentifier": [
+                      "subnet-3b833373",
+                      "subnet-1ac82a40",
+                      "subnet-925be0b9"
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_autoscaling.AutoScalingGroup",
+              "version": "2.50.0"
+            }
+          },
+          "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": {
+            "id": "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter",
+            "path": "AppStack/SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.50.0"
+            }
+          },
+          "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118": {
+            "id": "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118",
+            "path": "AppStack/SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.50.0"
+            }
+          },
+          "DemoECSCluster": {
+            "id": "DemoECSCluster",
+            "path": "AppStack/DemoECSCluster",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/DemoECSCluster/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCluster",
+                  "version": "2.50.0"
+                }
+              },
+              "DemoECSCluster": {
+                "id": "DemoECSCluster",
+                "path": "AppStack/DemoECSCluster/DemoECSCluster",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::ClusterCapacityProviderAssociations",
+                  "aws:cdk:cloudformation:props": {
+                    "capacityProviders": [
+                      {
+                        "Ref": "DemoASGProvider4E814F93"
+                      }
+                    ],
+                    "cluster": {
+                      "Ref": "DemoECSCluster76E5C18A"
+                    },
+                    "defaultCapacityProviderStrategy": []
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnClusterCapacityProviderAssociations",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Cluster",
+              "version": "2.50.0"
+            }
+          },
+          "DemoASGProvider": {
+            "id": "DemoASGProvider",
+            "path": "AppStack/DemoASGProvider",
+            "children": {
+              "DemoASGProvider": {
+                "id": "DemoASGProvider",
+                "path": "AppStack/DemoASGProvider/DemoASGProvider",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::CapacityProvider",
+                  "aws:cdk:cloudformation:props": {
+                    "autoScalingGroupProvider": {
+                      "autoScalingGroupArn": {
+                        "Ref": "DemoASG422AE839"
+                      },
+                      "managedScaling": {
+                        "status": "ENABLED",
+                        "targetCapacity": 100
+                      },
+                      "managedTerminationProtection": "ENABLED"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCapacityProvider",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.AsgCapacityProvider",
+              "version": "2.50.0"
+            }
+          },
+          "DemoECRImage": {
+            "id": "DemoECRImage",
+            "path": "AppStack/DemoECRImage",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.RepositoryBase",
+              "version": "2.50.0"
+            }
+          },
+          "DemoECSTaskDef": {
+            "id": "DemoECSTaskDef",
+            "path": "AppStack/DemoECSTaskDef",
+            "children": {
+              "TaskRole": {
+                "id": "TaskRole",
+                "path": "AppStack/DemoECSTaskDef/TaskRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AppStack/DemoECSTaskDef/TaskRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "tags": [
+                          {
+                            "key": "application",
+                            "value": "woven-demo"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.50.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/DemoECSTaskDef/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "869229378759.dkr.ecr.ap-northeast-1.",
+                              {
+                                "Ref": "AWS::URLSuffix"
+                              },
+                              "/woven-demo-app:latest"
+                            ]
+                          ]
+                        },
+                        "memory": 128,
+                        "name": "DemoECSTaskDefContainer",
+                        "portMappings": [
+                          {
+                            "containerPort": 3000,
+                            "hostPort": 0,
+                            "protocol": "tcp"
+                          }
+                        ],
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C"
+                            },
+                            "awslogs-stream-prefix": "woven-demo",
+                            "awslogs-region": "ap-northeast-1"
+                          }
+                        },
+                        "healthCheck": {
+                          "command": [
+                            "CMD-SHELL",
+                            "echo healthy || exit 1"
+                          ],
+                          "interval": 120,
+                          "retries": 3,
+                          "startPeriod": 120,
+                          "timeout": 5
+                        }
+                      }
+                    ],
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "DemoECSTaskDefExecutionRole5FAFFC54",
+                        "Arn"
+                      ]
+                    },
+                    "family": "AppStackDemoECSTaskDef083488EE",
+                    "networkMode": "bridge",
+                    "requiresCompatibilities": [
+                      "EC2"
+                    ],
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "DemoECSTaskDefTaskRoleA100DD9A",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.50.0"
+                }
+              },
+              "DemoECSTaskDefContainer": {
+                "id": "DemoECSTaskDefContainer",
+                "path": "AppStack/DemoECSTaskDef/DemoECSTaskDefContainer",
+                "children": {
+                  "LogGroup": {
+                    "id": "LogGroup",
+                    "path": "AppStack/DemoECSTaskDef/DemoECSTaskDefContainer/LogGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "AppStack/DemoECSTaskDef/DemoECSTaskDefContainer/LogGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "tags": [
+                              {
+                                "key": "application",
+                                "value": "woven-demo"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.50.0"
+                }
+              },
+              "ExecutionRole": {
+                "id": "ExecutionRole",
+                "path": "AppStack/DemoECSTaskDef/ExecutionRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AppStack/DemoECSTaskDef/ExecutionRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "tags": [
+                          {
+                            "key": "application",
+                            "value": "woven-demo"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "AppStack/DemoECSTaskDef/ExecutionRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "AppStack/DemoECSTaskDef/ExecutionRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "ecr:BatchCheckLayerAvailability",
+                                    "ecr:BatchGetImage",
+                                    "ecr:GetDownloadUrlForLayer"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "arn:aws:ecr:ap-northeast-1:869229378759:repository/woven-demo-app"
+                                },
+                                {
+                                  "Action": "ecr:GetAuthorizationToken",
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": [
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "DemoECSTaskDefExecutionRoleDefaultPolicyB5AE0CE5",
+                            "roles": [
+                              {
+                                "Ref": "DemoECSTaskDefExecutionRole5FAFFC54"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Ec2TaskDefinition",
+              "version": "2.50.0"
+            }
+          },
+          "DemoECSClusterEC2Service": {
+            "id": "DemoECSClusterEC2Service",
+            "path": "AppStack/DemoECSClusterEC2Service",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "AppStack/DemoECSClusterEC2Service/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "DemoECSCluster76E5C18A"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50
+                    },
+                    "enableEcsManagedTags": false,
+                    "healthCheckGracePeriodSeconds": 120,
+                    "launchType": "EC2",
+                    "loadBalancers": [
+                      {
+                        "targetGroupArn": {
+                          "Ref": "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239"
+                        },
+                        "containerName": "DemoECSTaskDefContainer",
+                        "containerPort": 3000
+                      }
+                    ],
+                    "schedulingStrategy": "REPLICA",
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ],
+                    "taskDefinition": {
+                      "Ref": "DemoECSTaskDef62825972"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Ec2Service",
+              "version": "2.50.0"
+            }
+          },
+          "DemoALB": {
+            "id": "DemoALB",
+            "path": "AppStack/DemoALB",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "AppStack/DemoALB/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "deletion_protection.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "scheme": "internet-facing",
+                    "securityGroups": [
+                      {
+                        "Fn::GetAtt": [
+                          "DemoALBSG7253B132",
+                          "GroupId"
+                        ]
+                      }
+                    ],
+                    "subnets": [
+                      "subnet-3b833373",
+                      "subnet-1ac82a40",
+                      "subnet-925be0b9"
+                    ],
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ],
+                    "type": "application"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.50.0"
+                }
+              },
+              "DemoALBListener": {
+                "id": "DemoALBListener",
+                "path": "AppStack/DemoALB/DemoALBListener",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AppStack/DemoALB/DemoALBListener/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                      "aws:cdk:cloudformation:props": {
+                        "defaultActions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239"
+                            }
+                          }
+                        ],
+                        "loadBalancerArn": {
+                          "Ref": "DemoALB6736E692"
+                        },
+                        "port": 80,
+                        "protocol": "HTTP"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "DemoECSClusterTargetGroup": {
+                    "id": "DemoECSClusterTargetGroup",
+                    "path": "AppStack/DemoALB/DemoALBListener/DemoECSClusterTargetGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "AppStack/DemoALB/DemoALBListener/DemoECSClusterTargetGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "healthCheckEnabled": true,
+                            "healthCheckIntervalSeconds": 120,
+                            "healthCheckPath": "/status",
+                            "port": 80,
+                            "protocol": "HTTP",
+                            "tags": [
+                              {
+                                "key": "application",
+                                "value": "woven-demo"
+                              }
+                            ],
+                            "targetGroupAttributes": [
+                              {
+                                "key": "stickiness.enabled",
+                                "value": "false"
+                              }
+                            ],
+                            "targetType": "instance",
+                            "vpcId": "vpc-2e48bf48"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+              "version": "2.50.0"
+            }
+          },
           "CDKMetadata": {
             "id": "CDKMetadata",
             "path": "AppStack/CDKMetadata",
@@ -27,12 +1043,30 @@
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.50.0"
                 }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "AppStack/CDKMetadata/Condition",
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.183"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "AppStack/Exports",
+            "children": {
+              "Output{\"Ref\":\"DemoECSCluster76E5C18A\"}": {
+                "id": "Output{\"Ref\":\"DemoECSCluster76E5C18A\"}",
+                "path": "AppStack/Exports/Output{\"Ref\":\"DemoECSCluster76E5C18A\"}",
                 "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.50.0"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"DemoECSClusterEC2Service58E000A9\",\"Name\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"DemoECSClusterEC2Service58E000A9\",\"Name\"]}",
+                "path": "AppStack/Exports/Output{\"Fn::GetAtt\":[\"DemoECSClusterEC2Service58E000A9\",\"Name\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.50.0"
                 }
               }
@@ -52,6 +1086,881 @@
         "id": "PipelineStack",
         "path": "PipelineStack",
         "children": {
+          "DemoCodePipeline": {
+            "id": "DemoCodePipeline",
+            "path": "PipelineStack/DemoCodePipeline",
+            "children": {
+              "ArtifactsBucket": {
+                "id": "ArtifactsBucket",
+                "path": "PipelineStack/DemoCodePipeline/ArtifactsBucket",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PipelineStack/DemoCodePipeline/ArtifactsBucket/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                      "aws:cdk:cloudformation:props": {
+                        "bucketEncryption": {
+                          "serverSideEncryptionConfiguration": [
+                            {
+                              "serverSideEncryptionByDefault": {
+                                "sseAlgorithm": "aws:kms"
+                              }
+                            }
+                          ]
+                        },
+                        "publicAccessBlockConfiguration": {
+                          "blockPublicAcls": true,
+                          "blockPublicPolicy": true,
+                          "ignorePublicAcls": true,
+                          "restrictPublicBuckets": true
+                        },
+                        "tags": [
+                          {
+                            "key": "application",
+                            "value": "woven-demo"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "Policy": {
+                    "id": "Policy",
+                    "path": "PipelineStack/DemoCodePipeline/ArtifactsBucket/Policy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "PipelineStack/DemoCodePipeline/ArtifactsBucket/Policy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                          "aws:cdk:cloudformation:props": {
+                            "bucket": {
+                              "Ref": "DemoCodePipelineArtifactsBucketA316DC01"
+                            },
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:*",
+                                  "Condition": {
+                                    "Bool": {
+                                      "aws:SecureTransport": "false"
+                                    }
+                                  },
+                                  "Effect": "Deny",
+                                  "Principal": {
+                                    "AWS": "*"
+                                  },
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "DemoCodePipelineArtifactsBucketA316DC01",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "DemoCodePipelineArtifactsBucketA316DC01",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.Bucket",
+                  "version": "2.50.0"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "PipelineStack/DemoCodePipeline/Role",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PipelineStack/DemoCodePipeline/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codepipeline.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "tags": [
+                          {
+                            "key": "application",
+                            "value": "woven-demo"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "PipelineStack/DemoCodePipeline/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "PipelineStack/DemoCodePipeline/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "DemoCodePipelineArtifactsBucketA316DC01",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "DemoCodePipelineArtifactsBucketA316DC01",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "DemoCodePipelineRoleDefaultPolicy0538704C",
+                            "roles": [
+                              {
+                                "Ref": "DemoCodePipelineRoleA52D9F30"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.50.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "PipelineStack/DemoCodePipeline/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodePipeline::Pipeline",
+                  "aws:cdk:cloudformation:props": {
+                    "roleArn": {
+                      "Fn::GetAtt": [
+                        "DemoCodePipelineRoleA52D9F30",
+                        "Arn"
+                      ]
+                    },
+                    "stages": [
+                      {
+                        "name": "Source",
+                        "actions": [
+                          {
+                            "name": "DemoGitHubSourceAction",
+                            "outputArtifacts": [
+                              {
+                                "name": "Artifact_Source_DemoGitHubSourceAction"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Source",
+                              "version": "1",
+                              "owner": "ThirdParty",
+                              "provider": "GitHub"
+                            },
+                            "configuration": {
+                              "Owner": "Karatakos",
+                              "Repo": "woven-demo-api",
+                              "Branch": "main",
+                              "OAuthToken": "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",
+                              "PollForSourceChanges": false
+                            },
+                            "runOrder": 1
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Build",
+                        "actions": [
+                          {
+                            "name": "DemoCodeBuildAction",
+                            "inputArtifacts": [
+                              {
+                                "name": "Artifact_Source_DemoGitHubSourceAction"
+                              }
+                            ],
+                            "outputArtifacts": [
+                              {
+                                "name": "Artifact_Build_DemoCodeBuildAction"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Build",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "CodeBuild"
+                            },
+                            "configuration": {
+                              "ProjectName": {
+                                "Ref": "TsukeAssetsCodeBuildActionEBCDB16C"
+                              }
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Deploy",
+                        "actions": [
+                          {
+                            "name": "DemoCodeDeployAction",
+                            "inputArtifacts": [
+                              {
+                                "name": "Artifact_Build_DemoCodeBuildAction"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Deploy",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "ECS"
+                            },
+                            "configuration": {
+                              "ClusterName": {
+                                "Fn::ImportValue": "AppStack:ExportsOutputRefDemoECSCluster76E5C18A198E0C70"
+                              },
+                              "ServiceName": {
+                                "Fn::ImportValue": "AppStack:ExportsOutputFnGetAttDemoECSClusterEC2Service58E000A9Name584E297B"
+                              }
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "artifactStore": {
+                      "type": "S3",
+                      "location": {
+                        "Ref": "DemoCodePipelineArtifactsBucketA316DC01"
+                      }
+                    },
+                    "tags": [
+                      {
+                        "key": "application",
+                        "value": "woven-demo"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codepipeline.CfnPipeline",
+                  "version": "2.50.0"
+                }
+              },
+              "Source": {
+                "id": "Source",
+                "path": "PipelineStack/DemoCodePipeline/Source",
+                "children": {
+                  "DemoGitHubSourceAction": {
+                    "id": "DemoGitHubSourceAction",
+                    "path": "PipelineStack/DemoCodePipeline/Source/DemoGitHubSourceAction",
+                    "children": {
+                      "WebhookResource": {
+                        "id": "WebhookResource",
+                        "path": "PipelineStack/DemoCodePipeline/Source/DemoGitHubSourceAction/WebhookResource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::CodePipeline::Webhook",
+                          "aws:cdk:cloudformation:props": {
+                            "authentication": "GITHUB_HMAC",
+                            "authenticationConfiguration": {
+                              "secretToken": "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"
+                            },
+                            "filters": [
+                              {
+                                "jsonPath": "$.ref",
+                                "matchEquals": "refs/heads/{Branch}"
+                              }
+                            ],
+                            "targetAction": "DemoGitHubSourceAction",
+                            "targetPipeline": {
+                              "Ref": "DemoCodePipelineDCF311B1"
+                            },
+                            "targetPipelineVersion": 1,
+                            "registerWithThirdParty": true
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_codepipeline.CfnWebhook",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.1.183"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.1.183"
+                }
+              },
+              "Build": {
+                "id": "Build",
+                "path": "PipelineStack/DemoCodePipeline/Build",
+                "children": {
+                  "DemoCodeBuildAction": {
+                    "id": "DemoCodeBuildAction",
+                    "path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::869229378759:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "tags": [
+                                  {
+                                    "key": "application",
+                                    "value": "woven-demo"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.50.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "codebuild:BatchGetBuilds",
+                                            "codebuild:StartBuild",
+                                            "codebuild:StopBuild"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "TsukeAssetsCodeBuildActionEBCDB16C",
+                                              "Arn"
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRoleDefaultPolicy7F463C4C",
+                                    "roles": [
+                                      {
+                                        "Ref": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.50.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.50.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.1.183"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.1.183"
+                }
+              },
+              "Deploy": {
+                "id": "Deploy",
+                "path": "PipelineStack/DemoCodePipeline/Deploy",
+                "children": {
+                  "DemoCodeDeployAction": {
+                    "id": "DemoCodeDeployAction",
+                    "path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::869229378759:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "tags": [
+                                  {
+                                    "key": "application",
+                                    "value": "woven-demo"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.50.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "ecs:DescribeServices",
+                                            "ecs:DescribeTaskDefinition",
+                                            "ecs:DescribeTasks",
+                                            "ecs:ListTasks",
+                                            "ecs:RegisterTaskDefinition",
+                                            "ecs:UpdateService"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        },
+                                        {
+                                          "Action": "iam:PassRole",
+                                          "Condition": {
+                                            "StringEqualsIfExists": {
+                                              "iam:PassedToService": [
+                                                "ec2.amazonaws.com",
+                                                "ecs-tasks.amazonaws.com"
+                                              ]
+                                            }
+                                          },
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        },
+                                        {
+                                          "Action": [
+                                            "s3:GetBucket*",
+                                            "s3:GetObject*",
+                                            "s3:List*"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": [
+                                            {
+                                              "Fn::GetAtt": [
+                                                "DemoCodePipelineArtifactsBucketA316DC01",
+                                                "Arn"
+                                              ]
+                                            },
+                                            {
+                                              "Fn::Join": [
+                                                "",
+                                                [
+                                                  {
+                                                    "Fn::GetAtt": [
+                                                      "DemoCodePipelineArtifactsBucketA316DC01",
+                                                      "Arn"
+                                                    ]
+                                                  },
+                                                  "/*"
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleDefaultPolicyBD1ABBA1",
+                                    "roles": [
+                                      {
+                                        "Ref": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.50.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.50.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.1.183"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.1.183"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codepipeline.Pipeline",
+              "version": "2.50.0"
+            }
+          },
+          "DemoCodeBuildRole": {
+            "id": "DemoCodeBuildRole",
+            "path": "PipelineStack/DemoCodeBuildRole",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "PipelineStack/DemoCodeBuildRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "codebuild.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.50.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "PipelineStack/DemoCodeBuildRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PipelineStack/DemoCodeBuildRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "ecr:BatchCheckLayerAvailability",
+                                "ecr:CompleteLayerUpload",
+                                "ecr:GetAuthorizationToken",
+                                "ecr:InitiateLayerUpload",
+                                "ecr:PutImage",
+                                "ecr:UploadLayerPart",
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:DescribeLogStreams",
+                                "logs:PutLogEvents",
+                                "s3:GetObject",
+                                "s3:ListBucket",
+                                "s3:ListObjects",
+                                "s3:PutObject"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "DemoCodeBuildRoleDefaultPolicy6A466DEC",
+                        "roles": [
+                          {
+                            "Ref": "DemoCodeBuildRole75B5C2D4"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.50.0"
+            }
+          },
+          "ImmutableRoleDemoCodeBuildRole": {
+            "id": "ImmutableRoleDemoCodeBuildRole",
+            "path": "PipelineStack/ImmutableRoleDemoCodeBuildRole",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.50.0"
+            }
+          },
+          "DemoCodeBuildLogs": {
+            "id": "DemoCodeBuildLogs",
+            "path": "PipelineStack/DemoCodeBuildLogs",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "PipelineStack/DemoCodeBuildLogs/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "retentionInDays": 731
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+              "version": "2.50.0"
+            }
+          },
+          "TsukeAssets-CodeBuild-Action": {
+            "id": "TsukeAssets-CodeBuild-Action",
+            "path": "PipelineStack/TsukeAssets-CodeBuild-Action",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "PipelineStack/TsukeAssets-CodeBuild-Action/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeBuild::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "artifacts": {
+                      "type": "CODEPIPELINE"
+                    },
+                    "environment": {
+                      "type": "LINUX_CONTAINER",
+                      "image": "aws/codebuild/standard:4.0",
+                      "imagePullCredentialsType": "CODEBUILD",
+                      "privilegedMode": true,
+                      "computeType": "BUILD_GENERAL1_SMALL",
+                      "environmentVariables": [
+                        {
+                          "name": "AWS_DEFAULT_REGION",
+                          "type": "PLAINTEXT",
+                          "value": "ap-northeast-1"
+                        },
+                        {
+                          "name": "AWS_ACCOUNT_ID",
+                          "type": "PLAINTEXT",
+                          "value": "869229378759"
+                        }
+                      ]
+                    },
+                    "serviceRole": {
+                      "Fn::GetAtt": [
+                        "DemoCodeBuildRole75B5C2D4",
+                        "Arn"
+                      ]
+                    },
+                    "source": {
+                      "type": "CODEPIPELINE",
+                      "buildSpec": "version: 0.2\nphases:\n  install:\n    commands:\n      - n 14.16.1\n  pre_build:\n    commands:\n      - echo 'Running tests'\n      - npm install\n      - npm run test\n      - echo 'Logging into Amazon ECR'\n      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com\n  build:\n    commands:\n      - echo 'Building the docker image'\n      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest -f service.Dockerfile .\n  post_build:\n    commands:\n      - echo 'Build complete'\n      - echo 'Pushing the docker image'\n      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest\n      - echo 'Generating imagedefinition.json for ECS deploy stage'\n      - echo '[{\"name\":\"DemoECSTaskDefContainer\",\"imageUri\":\"'$AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest'\"}]' > imagedefinitions.json\nartifacts:\n  files:\n    - imagedefinitions.json\n"
+                    },
+                    "cache": {
+                      "type": "NO_CACHE"
+                    },
+                    "encryptionKey": "alias/aws/s3",
+                    "logsConfig": {
+                      "cloudWatchLogs": {
+                        "status": "ENABLED",
+                        "groupName": {
+                          "Ref": "DemoCodeBuildLogsDD5D1728"
+                        }
+                      }
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codebuild.CfnProject",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codebuild.PipelineProject",
+              "version": "2.50.0"
+            }
+          },
           "CDKMetadata": {
             "id": "CDKMetadata",
             "path": "PipelineStack/CDKMetadata",
@@ -61,14 +1970,6 @@
                 "path": "PipelineStack/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
-                  "version": "2.50.0"
-                }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "PipelineStack/CDKMetadata/Condition",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
                   "version": "2.50.0"
                 }
               }

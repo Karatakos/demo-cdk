@@ -1,215 +1,690 @@
 {
  "Resources": {
+  "DemoALBSG7253B132": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "AppStack/DemoALBSG",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "from 0.0.0.0/0:80",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "VpcId": "vpc-2e48bf48"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoALBSG/Resource"
+   }
+  },
+  "DemoInstanceSGD8F010B2": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "AppStack/DemoInstanceSG",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "from 0.0.0.0/0:22",
+      "FromPort": 22,
+      "IpProtocol": "tcp",
+      "ToPort": 22
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "VpcId": "vpc-2e48bf48"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoInstanceSG/Resource"
+   }
+  },
+  "DemoInstanceSGfromAppStackDemoALBSGC2A030D932768655356FFE8EBD": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "IpProtocol": "tcp",
+    "Description": "from AppStackDemoALBSGC2A030D9:32768-65535",
+    "FromPort": 32768,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "DemoInstanceSGD8F010B2",
+      "GroupId"
+     ]
+    },
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "DemoALBSG7253B132",
+      "GroupId"
+     ]
+    },
+    "ToPort": 65535
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoInstanceSG/from AppStackDemoALBSGC2A030D9:32768-65535"
+   }
+  },
+  "demoInstanceRole7BC8FAD6": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/demoInstanceRole/Resource"
+   }
+  },
+  "demoInstanceRoleDefaultPolicy459B101F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecs:DeregisterContainerInstance",
+        "ecs:RegisterContainerInstance",
+        "ecs:Submit*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DemoECSCluster76E5C18A",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "ecs:Poll",
+        "ecs:StartTelemetrySession"
+       ],
+       "Condition": {
+        "ArnEquals": {
+         "ecs:cluster": {
+          "Fn::GetAtt": [
+           "DemoECSCluster76E5C18A",
+           "Arn"
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecs:DiscoverPollEndpoint",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demoInstanceRoleDefaultPolicy459B101F",
+    "Roles": [
+     {
+      "Ref": "demoInstanceRole7BC8FAD6"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/demoInstanceRole/DefaultPolicy/Resource"
+   }
+  },
+  "DemoASGInstanceProfile746346B1": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "demoInstanceRole7BC8FAD6"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoASG/InstanceProfile"
+   }
+  },
+  "DemoASGLaunchConfigF124DA9D": {
+   "Type": "AWS::AutoScaling::LaunchConfiguration",
+   "Properties": {
+    "ImageId": {
+     "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter"
+    },
+    "InstanceType": "t2.nano",
+    "IamInstanceProfile": {
+     "Ref": "DemoASGInstanceProfile746346B1"
+    },
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "DemoInstanceSGD8F010B2",
+       "GroupId"
+      ]
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": {
+      "Fn::Join": [
+       "",
+       [
+        "#!/bin/bash\necho ECS_CLUSTER=",
+        {
+         "Ref": "DemoECSCluster76E5C18A"
+        },
+        " >> /etc/ecs/ecs.config\nsudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP\nsudo service iptables save\necho ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config"
+       ]
+      ]
+     }
+    }
+   },
+   "DependsOn": [
+    "demoInstanceRoleDefaultPolicy459B101F",
+    "demoInstanceRole7BC8FAD6"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoASG/LaunchConfig"
+   }
+  },
+  "DemoASG422AE839": {
+   "Type": "AWS::AutoScaling::AutoScalingGroup",
+   "Properties": {
+    "MaxSize": "2",
+    "MinSize": "1",
+    "DesiredCapacity": "1",
+    "HealthCheckType": "EC2",
+    "LaunchConfigurationName": {
+     "Ref": "DemoASGLaunchConfigF124DA9D"
+    },
+    "NewInstancesProtectedFromScaleIn": true,
+    "Tags": [
+     {
+      "Key": "application",
+      "PropagateAtLaunch": true,
+      "Value": "woven-demo"
+     },
+     {
+      "Key": "Name",
+      "PropagateAtLaunch": true,
+      "Value": "AppStack/DemoASG"
+     }
+    ],
+    "VPCZoneIdentifier": [
+     "subnet-3b833373",
+     "subnet-1ac82a40",
+     "subnet-925be0b9"
+    ]
+   },
+   "UpdatePolicy": {
+    "AutoScalingScheduledAction": {
+     "IgnoreUnmodifiedGroupSizeProperties": true
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoASG/ASG"
+   }
+  },
+  "DemoECSCluster76E5C18A": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSCluster/Resource"
+   }
+  },
+  "DemoECSClusterAEF07540": {
+   "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
+   "Properties": {
+    "CapacityProviders": [
+     {
+      "Ref": "DemoASGProvider4E814F93"
+     }
+    ],
+    "Cluster": {
+     "Ref": "DemoECSCluster76E5C18A"
+    },
+    "DefaultCapacityProviderStrategy": []
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSCluster/DemoECSCluster"
+   }
+  },
+  "DemoASGProvider4E814F93": {
+   "Type": "AWS::ECS::CapacityProvider",
+   "Properties": {
+    "AutoScalingGroupProvider": {
+     "AutoScalingGroupArn": {
+      "Ref": "DemoASG422AE839"
+     },
+     "ManagedScaling": {
+      "Status": "ENABLED",
+      "TargetCapacity": 100
+     },
+     "ManagedTerminationProtection": "ENABLED"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoASGProvider/DemoASGProvider"
+   }
+  },
+  "DemoECSTaskDefTaskRoleA100DD9A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSTaskDef/TaskRole/Resource"
+   }
+  },
+  "DemoECSTaskDef62825972": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Essential": true,
+      "HealthCheck": {
+       "Command": [
+        "CMD-SHELL",
+        "echo healthy || exit 1"
+       ],
+       "Interval": 120,
+       "Retries": 3,
+       "StartPeriod": 120,
+       "Timeout": 5
+      },
+      "Image": {
+       "Fn::Join": [
+        "",
+        [
+         "869229378759.dkr.ecr.ap-northeast-1.",
+         {
+          "Ref": "AWS::URLSuffix"
+         },
+         "/woven-demo-app:latest"
+        ]
+       ]
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C"
+        },
+        "awslogs-stream-prefix": "woven-demo",
+        "awslogs-region": "ap-northeast-1"
+       }
+      },
+      "Memory": 128,
+      "Name": "DemoECSTaskDefContainer",
+      "PortMappings": [
+       {
+        "ContainerPort": 3000,
+        "HostPort": 0,
+        "Protocol": "tcp"
+       }
+      ]
+     }
+    ],
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "DemoECSTaskDefExecutionRole5FAFFC54",
+      "Arn"
+     ]
+    },
+    "Family": "AppStackDemoECSTaskDef083488EE",
+    "NetworkMode": "bridge",
+    "RequiresCompatibilities": [
+     "EC2"
+    ],
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "DemoECSTaskDefTaskRoleA100DD9A",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSTaskDef/Resource"
+   }
+  },
+  "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSTaskDef/DemoECSTaskDefContainer/LogGroup/Resource"
+   }
+  },
+  "DemoECSTaskDefExecutionRole5FAFFC54": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSTaskDef/ExecutionRole/Resource"
+   }
+  },
+  "DemoECSTaskDefExecutionRoleDefaultPolicyB5AE0CE5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ecr:ap-northeast-1:869229378759:repository/woven-demo-app"
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DemoECSTaskDefDemoECSTaskDefContainerLogGroup8F7A719C",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DemoECSTaskDefExecutionRoleDefaultPolicyB5AE0CE5",
+    "Roles": [
+     {
+      "Ref": "DemoECSTaskDefExecutionRole5FAFFC54"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSTaskDef/ExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "DemoECSClusterEC2Service58E000A9": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "DemoECSCluster76E5C18A"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 120,
+    "LaunchType": "EC2",
+    "LoadBalancers": [
+     {
+      "ContainerName": "DemoECSTaskDefContainer",
+      "ContainerPort": 3000,
+      "TargetGroupArn": {
+       "Ref": "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239"
+      }
+     }
+    ],
+    "SchedulingStrategy": "REPLICA",
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "TaskDefinition": {
+     "Ref": "DemoECSTaskDef62825972"
+    }
+   },
+   "DependsOn": [
+    "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239",
+    "DemoALBDemoALBListenerB1477B05"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoECSClusterEC2Service/Service"
+   }
+  },
+  "DemoALB6736E692": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "DemoALBSG7253B132",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     "subnet-3b833373",
+     "subnet-1ac82a40",
+     "subnet-925be0b9"
+    ],
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "Type": "application"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoALB/Resource"
+   }
+  },
+  "DemoALBDemoALBListenerB1477B05": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "DemoALB6736E692"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoALB/DemoALBListener/Resource"
+   }
+  },
+  "DemoALBDemoALBListenerDemoECSClusterTargetGroup14A25239": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckEnabled": true,
+    "HealthCheckIntervalSeconds": 120,
+    "HealthCheckPath": "/status",
+    "Port": 80,
+    "Protocol": "HTTP",
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ],
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "instance",
+    "VpcId": "vpc-2e48bf48"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack/DemoALB/DemoALBListener/DemoECSClusterTargetGroup/Resource"
+   }
+  },
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzXQM1BMLC/WTU7J1s3JTNKrDi5JTM7WcU7LC0otzi8tSk4FsZ3z81IySzLz82p18vJTUvWyivXLDE30DM30DBWzijMzdYtK80oyc1P1giA0AMURBTlZAAAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31SwW7CMAz9lt1DBmjbvXTThMQBFe6TSU1nCHEVp0yo6r8vbYF1nbRT/N5zEr+XzPXzVE8f4EsmJj9OLO10vQlgjipD4cobVFH7qNHMo4Cm8hQu756rUqV79z+xdIVHkUYRnHSdscW2pVvXbMlcWvhTLZ0EcAbXnvdksVFQBRYDllyh6ySCTQ/ut62gcuYzZbenovIQiF1Lj1sbhUZ0ndpKAvq242+ZQgkmDh4vP1OOPhFhQ92RohIpxnq3dcy9mfkW5PiKe3J0m2bMsAtADv2Ai/s26M9ksM+wK9upvc6wZKHA/rIAQWW5iE5WPMiA7yYtSCBjGfId2Jhk9H+Or5aUZYy4s7KK2qLTege/8LCPYibu2nOrB/oWfIHhPsMANk33qODhhNeEbx+pUY5z1Ad5PM+e9OxFzx4OQjTxlQt0Qp316zevFaOwkgIAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "AppStack/CDKMetadata/Default"
-   },
-   "Condition": "CDKMetadataAvailable"
-  }
- },
- "Conditions": {
-  "CDKMetadataAvailable": {
-   "Fn::Or": [
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "af-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ca-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-northwest-1"
-       ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-3"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "me-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "sa-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-2"
-       ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-2"
-       ]
-      }
-     ]
-    }
-   ]
+   }
   }
  },
  "Parameters": {
+  "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+   "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+   "Default": "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+  },
   "BootstrapVersion": {
    "Type": "AWS::SSM::Parameter::Value<String>",
    "Default": "/cdk-bootstrap/hnb659fds/version",
    "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Outputs": {
+  "ExportsOutputRefDemoECSCluster76E5C18A198E0C70": {
+   "Value": {
+    "Ref": "DemoECSCluster76E5C18A"
+   },
+   "Export": {
+    "Name": "AppStack:ExportsOutputRefDemoECSCluster76E5C18A198E0C70"
+   }
+  },
+  "ExportsOutputFnGetAttDemoECSClusterEC2Service58E000A9Name584E297B": {
+   "Value": {
+    "Fn::GetAtt": [
+     "DemoECSClusterEC2Service58E000A9",
+     "Name"
+    ]
+   },
+   "Export": {
+    "Name": "AppStack:ExportsOutputFnGetAttDemoECSClusterEC2Service58E000A9Name584E297B"
+   }
   }
  },
  "Rules": {

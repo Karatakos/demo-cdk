@@ -1,208 +1,628 @@
 {
  "Resources": {
+  "DemoCodePipelineArtifactsBucketA316DC01": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/ArtifactsBucket/Resource"
+   }
+  },
+  "DemoCodePipelineArtifactsBucketPolicyBAF2A3CA": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "DemoCodePipelineArtifactsBucketA316DC01"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DemoCodePipelineArtifactsBucketA316DC01",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DemoCodePipelineArtifactsBucketA316DC01",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/ArtifactsBucket/Policy/Resource"
+   }
+  },
+  "DemoCodePipelineRoleA52D9F30": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Role/Resource"
+   }
+  },
+  "DemoCodePipelineRoleDefaultPolicy0538704C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DemoCodePipelineArtifactsBucketA316DC01",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DemoCodePipelineArtifactsBucketA316DC01",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9",
+          "Arn"
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DemoCodePipelineRoleDefaultPolicy0538704C",
+    "Roles": [
+     {
+      "Ref": "DemoCodePipelineRoleA52D9F30"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Role/DefaultPolicy/Resource"
+   }
+  },
+  "DemoCodePipelineDCF311B1": {
+   "Type": "AWS::CodePipeline::Pipeline",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "DemoCodePipelineRoleA52D9F30",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "ThirdParty",
+         "Provider": "GitHub",
+         "Version": "1"
+        },
+        "Configuration": {
+         "Owner": "Karatakos",
+         "Repo": "woven-demo-api",
+         "Branch": "main",
+         "OAuthToken": "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",
+         "PollForSourceChanges": false
+        },
+        "Name": "DemoGitHubSourceAction",
+        "OutputArtifacts": [
+         {
+          "Name": "Artifact_Source_DemoGitHubSourceAction"
+         }
+        ],
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Source"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "TsukeAssetsCodeBuildActionEBCDB16C"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Source_DemoGitHubSourceAction"
+         }
+        ],
+        "Name": "DemoCodeBuildAction",
+        "OutputArtifacts": [
+         {
+          "Name": "Artifact_Build_DemoCodeBuildAction"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "ECS",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ClusterName": {
+          "Fn::ImportValue": "AppStack:ExportsOutputRefDemoECSCluster76E5C18A198E0C70"
+         },
+         "ServiceName": {
+          "Fn::ImportValue": "AppStack:ExportsOutputFnGetAttDemoECSClusterEC2Service58E000A9Name584E297B"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Build_DemoCodeBuildAction"
+         }
+        ],
+        "Name": "DemoCodeDeployAction",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Deploy"
+     }
+    ],
+    "ArtifactStore": {
+     "Location": {
+      "Ref": "DemoCodePipelineArtifactsBucketA316DC01"
+     },
+     "Type": "S3"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "DependsOn": [
+    "DemoCodePipelineRoleDefaultPolicy0538704C",
+    "DemoCodePipelineRoleA52D9F30"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Resource"
+   }
+  },
+  "DemoCodePipelineSourceDemoGitHubSourceActionWebhookResource83375054": {
+   "Type": "AWS::CodePipeline::Webhook",
+   "Properties": {
+    "Authentication": "GITHUB_HMAC",
+    "AuthenticationConfiguration": {
+     "SecretToken": "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"
+    },
+    "Filters": [
+     {
+      "JsonPath": "$.ref",
+      "MatchEquals": "refs/heads/{Branch}"
+     }
+    ],
+    "TargetAction": "DemoGitHubSourceAction",
+    "TargetPipeline": {
+     "Ref": "DemoCodePipelineDCF311B1"
+    },
+    "TargetPipelineVersion": 1,
+    "RegisterWithThirdParty": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Source/DemoGitHubSourceAction/WebhookResource"
+   }
+  },
+  "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::869229378759:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/Resource"
+   }
+  },
+  "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRoleDefaultPolicy7F463C4C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "TsukeAssetsCodeBuildActionEBCDB16C",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRoleDefaultPolicy7F463C4C",
+    "Roles": [
+     {
+      "Ref": "DemoCodePipelineBuildDemoCodeBuildActionCodePipelineActionRole03B386B3"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Build/DemoCodeBuildAction/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::869229378759:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "application",
+      "Value": "woven-demo"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/Resource"
+   }
+  },
+  "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleDefaultPolicyBD1ABBA1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:DescribeTasks",
+        "ecs:ListTasks",
+        "ecs:RegisterTaskDefinition",
+        "ecs:UpdateService"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "iam:PassRole",
+       "Condition": {
+        "StringEqualsIfExists": {
+         "iam:PassedToService": [
+          "ec2.amazonaws.com",
+          "ecs-tasks.amazonaws.com"
+         ]
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DemoCodePipelineArtifactsBucketA316DC01",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DemoCodePipelineArtifactsBucketA316DC01",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleDefaultPolicyBD1ABBA1",
+    "Roles": [
+     {
+      "Ref": "DemoCodePipelineDeployDemoCodeDeployActionCodePipelineActionRoleD1B334A9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodePipeline/Deploy/DemoCodeDeployAction/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "DemoCodeBuildRole75B5C2D4": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodeBuildRole/Resource"
+   }
+  },
+  "DemoCodeBuildRoleDefaultPolicy6A466DEC": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetAuthorizationToken",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:ListObjects",
+        "s3:PutObject"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DemoCodeBuildRoleDefaultPolicy6A466DEC",
+    "Roles": [
+     {
+      "Ref": "DemoCodeBuildRole75B5C2D4"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodeBuildRole/DefaultPolicy/Resource"
+   }
+  },
+  "DemoCodeBuildLogsDD5D1728": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/DemoCodeBuildLogs/Resource"
+   }
+  },
+  "TsukeAssetsCodeBuildActionEBCDB16C": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "EnvironmentVariables": [
+      {
+       "Name": "AWS_DEFAULT_REGION",
+       "Type": "PLAINTEXT",
+       "Value": "ap-northeast-1"
+      },
+      {
+       "Name": "AWS_ACCOUNT_ID",
+       "Type": "PLAINTEXT",
+       "Value": "869229378759"
+      }
+     ],
+     "Image": "aws/codebuild/standard:4.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": true,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "DemoCodeBuildRole75B5C2D4",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "version: 0.2\nphases:\n  install:\n    commands:\n      - n 14.16.1\n  pre_build:\n    commands:\n      - echo 'Running tests'\n      - npm install\n      - npm run test\n      - echo 'Logging into Amazon ECR'\n      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com\n  build:\n    commands:\n      - echo 'Building the docker image'\n      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest -f service.Dockerfile .\n  post_build:\n    commands:\n      - echo 'Build complete'\n      - echo 'Pushing the docker image'\n      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest\n      - echo 'Generating imagedefinition.json for ECS deploy stage'\n      - echo '[{\"name\":\"DemoECSTaskDefContainer\",\"imageUri\":\"'$AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/woven-demo-app:latest'\"}]' > imagedefinitions.json\nartifacts:\n  files:\n    - imagedefinitions.json\n",
+     "Type": "CODEPIPELINE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "LogsConfig": {
+     "CloudWatchLogs": {
+      "GroupName": {
+       "Ref": "DemoCodeBuildLogsDD5D1728"
+      },
+      "Status": "ENABLED"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/TsukeAssets-CodeBuild-Action/Resource"
+   }
+  },
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzXQM1BMLC/WTU7J1s3JTNKrDi5JTM7WcU7LC0otzi8tSk4FsZ3z81IySzLz82p18vJTUvWyivXLDE30DM30DBWzijMzdYtK80oyc1P1giA0AMURBTlZAAAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OuxKCMBBFv4U+rODrA7SwsWCwsHQgRFwSsgwhOk4m/y7Pweqevfu6WzhEEAXZx4S8kKHCHNyty7hkvfVwnArRYCMUagEumYmdn/qf7yJ/EUnPzA7cyXIpusGeaZKEFPLvak+1Z5jV4FJS46FR18llRlFpwF2pvLRkm6GzsGdDwtyiKtZ4SUuV4GOEGb1nqTBkWz69mdkz3W9DZTbveA/xEeKgMohha3WHtYB00h82CoWKJAEAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKMetadata/Default"
-   },
-   "Condition": "CDKMetadataAvailable"
-  }
- },
- "Conditions": {
-  "CDKMetadataAvailable": {
-   "Fn::Or": [
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "af-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ca-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-northwest-1"
-       ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-3"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "me-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "sa-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-2"
-       ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-2"
-       ]
-      }
-     ]
-    }
-   ]
+   }
   }
  },
  "Parameters": {
