@@ -1,4 +1,4 @@
-# Woven Demo CICD Project via CDK
+# Demo CICD Project via CDK
 
 ## Deployment
 
